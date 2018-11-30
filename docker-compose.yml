@@ -1,0 +1,22 @@
+version: '3.2'
+
+services:
+
+  chat_websockets_app: &app
+    build:
+      context: .
+      args:
+        requirements: requirements/development.txt
+    container_name: chat_websockets
+    environment:
+      # use in code
+      - DEBUG=True
+      - SETTINGS_FILE=api.dev.yml
+    restart: always
+    volumes:
+      - .:/app:delegated
+    ports:
+      - 8080:8080
+      - 8081:8081
+    command: make adev
+
