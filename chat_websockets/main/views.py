@@ -8,6 +8,10 @@ def redirect(request, route_name):
     raise web.HTTPFound(url)
 
 
+class ChatList(web.View):
+    pass
+
+
 class LoginView(web.View):
     @aiohttp_jinja2.template('auth/login.html')
     async def get(self):
