@@ -22,4 +22,4 @@ test: lint
 	@docker-compose stop test
 
 adev:
-	adev runserver ./chat_websockets/__main__.py -p 8080
+	adev runserver ./chat_websockets/__main__.py -p 8000

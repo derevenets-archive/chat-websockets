@@ -11,7 +11,7 @@ def init_routes(app: web.Application) -> None:
     add_route = app.router.add_route
 
     add_route('*', '/login', LoginView, name='login')
-    add_route('GET', '/', ChatList, 'main')
+    add_route('GET', '/', ChatList, name='main')
 
     # added static dir
     app.router.add_static(

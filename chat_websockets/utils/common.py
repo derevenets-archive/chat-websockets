@@ -33,10 +33,6 @@ def get_config(argv: Any = None) -> Any:
     return commandline.config_from_options(options, CONFIG_TRAFARET)
 
 
-def init_config(
-        app: web.Application,
-        *,
-        config: Optional[List[str]] = None
-) -> None:
-    app['config'] = \
-        get_config(config or ['-c', DEFAULT_CONFIG_PATH.as_posix()])
+def init_config(app: web.Application, *,
+                config: Optional[List[str]] = None) -> None:
+    app['config'] = get_config(config or ['-c', DEFAULT_CONFIG_PATH.as_posix()])
