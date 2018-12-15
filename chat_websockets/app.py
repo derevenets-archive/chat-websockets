@@ -13,9 +13,7 @@ path = Path(__file__).parent
 
 
 def init_jinja2(app: web.Application) -> None:
-    '''
-    Initialize jinja2 template for application.
-    '''
+    """ Initialize jinja2 template for application """
     aiohttp_jinja2.setup(
         app,
         loader=jinja2.FileSystemLoader(str(path / 'templates'))
