@@ -4,7 +4,7 @@ from aiohttp_session import get_session
 
 
 def redirect(request, route_name):
-    url = request.app.router[route_name].url()
+    url = request.app.router[route_name].url_for()
     raise web.HTTPFound(url)
 
 

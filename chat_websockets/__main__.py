@@ -1,5 +1,6 @@
 import base64
 
+import aiohttp_debugtoolbar
 from aiohttp import web
 from aiohttp_session import setup, cookie_storage
 from cryptography import fernet
@@ -9,8 +10,7 @@ from .app import init_app
 
 def create_app() -> web.Application:
     app = init_app()
-    # import aiohttp_debugtoolbar
-    # aiohttp_debugtoolbar.setup(app, check_host=False)
+    aiohttp_debugtoolbar.setup(app, check_host=False)
 
     fernet_key = fernet.Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
