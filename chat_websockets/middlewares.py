@@ -26,12 +26,13 @@ async def authorize(app, handler):
 
 
 async def db_handler(app, handler):
+
     async def middleware(request):
         if (request.path.startswith('/static/')
                 or request.path.startswith('/_debugtoolbar')):
             return await handler(request)
 
         request.db = app.db
-        return handler(request)
+        return await handler(request)
 
     return middleware
