@@ -29,6 +29,10 @@ class ChatList(web.View):
     pass
 
 
+class SignOut(web.View):
+    pass
+
+
 class LoginView(web.View):
     @aiohttp_jinja2.template('auth/login.html')
     async def get(self):
