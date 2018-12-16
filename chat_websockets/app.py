@@ -24,6 +24,16 @@ def init_jinja2(app: web.Application) -> None:
     )
 
 
+# TODO: should be refactored or moved to better place
+async def on_shutdown(server, app, handler):
+    server.close()
+    await server.wait_closed()
+    app.client.close()  # database connection close
+    await app.shutdown()
+    await handler.finish_connections(10.0)
+    await app.cleanup()
+
+
 def init_app(config: Optional[List[str]] = None) -> web.Application:
     fernet_key = fernet.Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
@@ -46,5 +56,7 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     # MONGO_DB_NAME - chat_test_db
     app.client = ma.AsyncIOMotorClient('mongodb://mongo:27017')
     app.db = app.client['chat_test_db']
+
+    app.on_shutdown.append(on_shutdown)
 
     return app
