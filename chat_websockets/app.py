@@ -57,6 +57,6 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     app.client = ma.AsyncIOMotorClient('mongodb://mongo:27017')
     app.db = app.client['chat_test_db']
 
-    app.on_shutdown.append(on_shutdown)
+    # app.on_shutdown.append(on_shutdown)
 
     return app
