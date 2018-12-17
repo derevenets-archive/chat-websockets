@@ -6,7 +6,6 @@ import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 from aiohttp_session import cookie_storage, session_middleware
-from cryptography import fernet
 from motor import motor_asyncio as ma
 
 from chat_websockets.routes import init_routes
@@ -24,6 +23,10 @@ def init_jinja2(app: web.Application) -> None:
     )
 
 
+# TODO: move to settings and make it more safe
+SECRET_KEY = b'dmnWwD9-Up3q8MoEVsC1LhhnTQ_snTmLKJ-A9s8OivI='
+
+
 # TODO: should be refactored or moved to better place
 async def on_shutdown(server, app, handler):
     server.close()
@@ -35,8 +38,7 @@ async def on_shutdown(server, app, handler):
 
 
 def init_app(config: Optional[List[str]] = None) -> web.Application:
-    fernet_key = fernet.Fernet.generate_key()
-    secret_key = base64.urlsafe_b64decode(fernet_key)
+    secret_key = base64.urlsafe_b64decode(SECRET_KEY)
 
     app = web.Application(
         middlewares=[
