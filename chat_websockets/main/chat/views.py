@@ -11,3 +11,7 @@ class ChatList(web.View):
         message = Message(self.request.db)
         messages = await message.get_messages()
         return {'messages': messages}
+
+
+class WebSocket(web.View):
+    pass
