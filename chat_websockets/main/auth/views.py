@@ -1,30 +1,14 @@
-import json
-from time import time
-
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 from bson.objectid import ObjectId
 
-from chat_websockets.main.auth.models import User
-
-
-def redirect(request, route_name):
-    url = request.app.router[route_name].url_for()
-    raise web.HTTPFound(url)
-
-
-def set_session(session, user_id, request):
-    session['user_id'] = str(user_id)
-    session['last_visit'] = time()
-    redirect(request, route_name='main')
-
-
-def convert_json(message):
-    return json.dumps({'error': message})
+from .models import User
+from .utils import redirect, convert_json, set_session
 
 
 class LoginView(web.View):
+
     @aiohttp_jinja2.template('auth/login.html')
     async def get(self):
         session = await get_session(self.request)
@@ -33,6 +17,7 @@ class LoginView(web.View):
         return {'content': 'Please, enter login or email'}
 
     async def post(self):
+        """Get data from POST request, check user existence and set session"""
         data = await self.request.post()
         user = User(self.request.db, data)
         result = await user.check_user_exists()
@@ -49,6 +34,7 @@ class LoginView(web.View):
 
 
 class SingIn(web.View):
+
     @aiohttp_jinja2.template('auth/signin.html')
     async def get(self):
         session = await get_session(self.request)
@@ -59,7 +45,6 @@ class SingIn(web.View):
     async def post(self):
         """Get data from POST request, create new User model and set session"""
         data = await self.request.post()
-        print('data', data)
         user = User(self.request.db, data)
         result = await user.create_user()
 
