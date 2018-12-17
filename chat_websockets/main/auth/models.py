@@ -12,7 +12,8 @@ class User:
         self.password = data.get('password')
         self.id = data.get('id')
 
-    async def check_user(self):
+    async def check_user_exists(self):
+        """Check if user with provided login exists"""
         return await self.collection.find_one({'login': self.login})
 
     async def get_login(self):
@@ -21,9 +22,9 @@ class User:
         return user.get('login')
 
     async def create_user(self):
-        user = await self.check_user()
+        user_exists = await self.check_user_exists()
         result = 'User exists'
-        if not user:
+        if not user_exists:
             result = await self.collection.insert_one({
                 'email': self.email,
                 'login': self.login,
