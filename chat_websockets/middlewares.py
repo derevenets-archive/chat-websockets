@@ -3,7 +3,6 @@ from aiohttp_session import get_session
 
 
 async def authorize(app, handler):
-
     async def middleware(request):
         def check_path(path):
             result = True
@@ -14,7 +13,7 @@ async def authorize(app, handler):
             return result
 
         session = await get_session(request)
-        if session.get('user'):
+        if session.get('user_id'):
             return await handler(request)
         elif check_path(request.path):
             url = request.app.router['login'].url_for()
@@ -26,7 +25,6 @@ async def authorize(app, handler):
 
 
 async def db_handler(app, handler):
-
     async def middleware(request):
         if (request.path.startswith('/static/')
                 or request.path.startswith('/_debugtoolbar')):

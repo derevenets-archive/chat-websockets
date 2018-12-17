@@ -12,7 +12,7 @@ class LoginView(web.View):
     @aiohttp_jinja2.template('auth/login.html')
     async def get(self):
         session = await get_session(self.request)
-        if session.get('user'):
+        if session.get('user_id'):
             redirect(self.request, 'main')
         return {'content': 'Please, enter login or email'}
 
@@ -38,7 +38,7 @@ class SingIn(web.View):
     @aiohttp_jinja2.template('auth/signin.html')
     async def get(self):
         session = await get_session(self.request)
-        if session.get('user'):
+        if session.get('user_id'):
             redirect(self.request, 'main')
         return {'content': 'Please enter your data'}
 
