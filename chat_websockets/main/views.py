@@ -15,10 +15,9 @@ def redirect(request, route_name):
 
 
 def set_session(session, user_id, request):
-    session['user'] = str(user_id)
+    session['user_id'] = str(user_id)
     session['last_visit'] = time()
-    print(session)
-    redirect(request, 'main')
+    redirect(request, route_name='main')
 
 
 def convert_json(message):
@@ -51,15 +50,18 @@ class SingIn(web.View):
         return {'content': 'Please enter your data'}
 
     async def post(self):
+        """Get data from POST request, create new User model and set session"""
         data = await self.request.post()
+        print('data', data)
         user = User(self.request.db, data)
-        user_id = await user.create_user()
-        print(user_id, type(user_id), "sign")
-        if isinstance(user_id, ObjectId):
+        result = await user.create_user()
+
+        # insertion was made correctly
+        if isinstance(result.inserted_id, ObjectId):
             session = await get_session(self.request)
-            set_session(session, user_id, self.request)
+            set_session(session, result.inserted_id, self.request)
         else:
             return web.Response(
                 content_type='application/json',
-                text=convert_json(user_id)
+                text=convert_json(result)
             )
