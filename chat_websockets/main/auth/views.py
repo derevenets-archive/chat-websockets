@@ -6,7 +6,7 @@ from aiohttp import web
 from aiohttp_session import get_session
 from bson.objectid import ObjectId
 
-from .auth.models import User
+from chat_websockets.main.auth.models import User
 
 
 def redirect(request, route_name):
@@ -22,10 +22,6 @@ def set_session(session, user_id, request):
 
 def convert_json(message):
     return json.dumps({'error': message})
-
-
-class ChatList(web.View):
-    pass
 
 
 class LoginView(web.View):

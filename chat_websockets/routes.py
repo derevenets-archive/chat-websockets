@@ -2,7 +2,8 @@ import pathlib
 
 from aiohttp import web
 
-from chat_websockets.main.views import LoginView, ChatList, SingIn, SignOut
+from chat_websockets.main.auth.views import LoginView, SingIn, SignOut
+from chat_websockets.main.chat.views import ChatList
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 
