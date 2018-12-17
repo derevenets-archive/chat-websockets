@@ -17,13 +17,14 @@ class User:
 
     async def get_login(self):
         user = await self.collection.find_one({'_id': ObjectId(self.id)})
+        print('get_login user', user)
         return user.get('login')
 
     async def create_user(self):
         user = await self.check_user()
         result = 'User exists'
         if not user:
-            result = await self.collection.insert({
+            result = await self.collection.insert_one({
                 'email': self.email,
                 'login': self.login,
                 'password': self.password
