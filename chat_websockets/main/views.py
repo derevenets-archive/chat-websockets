@@ -28,10 +28,6 @@ class ChatList(web.View):
     pass
 
 
-class SignOut(web.View):
-    pass
-
-
 class LoginView(web.View):
     @aiohttp_jinja2.template('auth/login.html')
     async def get(self):
@@ -39,6 +35,21 @@ class LoginView(web.View):
         if session.get('user'):
             redirect(self.request, 'main')
         return {'content': 'Please, enter login or email'}
+
+    async def post(self):
+        data = await self.request.post()
+        user = User(self.request.db, data)
+        result = await user.check_user_exists()
+
+        # user object was returned, so, user exists
+        if isinstance(result, dict):
+            session = await get_session(self.request)
+            set_session(session, result['_id'], self.request)
+        else:
+            return web.Response(
+                content_type='application/json',
+                text=convert_json(result)
+            )
 
 
 class SingIn(web.View):
@@ -56,7 +67,7 @@ class SingIn(web.View):
         user = User(self.request.db, data)
         result = await user.create_user()
 
-        # insertion was made correctly
+        # user was created successfully
         if isinstance(result.inserted_id, ObjectId):
             session = await get_session(self.request)
             set_session(session, result.inserted_id, self.request)
@@ -65,3 +76,7 @@ class SingIn(web.View):
                 content_type='application/json',
                 text=convert_json(result)
             )
+
+
+class SignOut(web.View):
+    pass
