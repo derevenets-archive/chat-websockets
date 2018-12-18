@@ -4,7 +4,7 @@ from typing import Optional, List
 
 import aiohttp_jinja2
 import jinja2
-from aiohttp import web
+from aiohttp import web, WSCloseCode
 from aiohttp_session import cookie_storage, session_middleware
 from motor import motor_asyncio as ma
 
@@ -28,13 +28,21 @@ SECRET_KEY = b'dmnWwD9-Up3q8MoEVsC1LhhnTQ_snTmLKJ-A9s8OivI='
 
 
 # TODO: should be refactored or moved to better place
-async def on_shutdown(server, app, handler):
+async def on_shutdown2(server, app, handler):
     server.close()
     await server.wait_closed()
     app.client.close()  # database connection close
     await app.shutdown()
     await handler.finish_connections(10.0)
     await app.cleanup()
+
+
+async def on_shutdown(app):
+    for ws in set(app['websockets']):
+        await ws.close(
+            code=WSCloseCode.GOING_AWAY,
+            message='Server shutdown'
+        )
 
 
 def init_app(config: Optional[List[str]] = None) -> web.Application:
@@ -54,11 +62,12 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     init_config(app, config=config)
     init_routes(app)
 
+    app['websockets'] = []
     # MONGO_HOST    - mongodb://mongo:27017
     # MONGO_DB_NAME - chat_test_db
     app.client = ma.AsyncIOMotorClient('mongodb://mongo_db:27017')
     app.db = app.client['chat_test_db']
 
-    # app.on_shutdown.append(on_shutdown)
+    app.on_shutdown.append(on_shutdown)
 
     return app
