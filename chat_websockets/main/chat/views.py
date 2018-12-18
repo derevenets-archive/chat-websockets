@@ -34,8 +34,7 @@ class WebSocket(web.View):
                     await ws.close()
                 else:
                     message = Message(self.request.db)
-                    result = await message.save(user=login, text=msg.data)
-                    print('result', result)
+                    await message.save(user=login, text=msg.data)
                     for _ws in self.request.app['websockets']:
                         await _ws.send_str('(%s) %s' % (login, msg.data))
             elif msg.type == WSMsgType.ERROR:
@@ -44,6 +43,5 @@ class WebSocket(web.View):
         self.request.app['websockets'].remove(ws)
         for _ws in self.request.app['websockets']:
             await _ws.send_str('%s disconected' % login)
-        print('websocket connection closed')
 
         return ws
