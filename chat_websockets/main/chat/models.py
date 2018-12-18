@@ -4,7 +4,6 @@ MESSAGE_COLLECTION = 'messages'
 
 
 class Message:
-
     def __init__(self, db):
         self.collection = db[MESSAGE_COLLECTION]
 
@@ -18,4 +17,3 @@ class Message:
     async def get_messages(self):
         messages = self.collection.find().sort([('time', 1)])
         return await messages.to_list(length=None)
-

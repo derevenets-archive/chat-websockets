@@ -60,4 +60,10 @@ class SingIn(web.View):
 
 
 class SignOut(web.View):
-    pass
+    async def get(self):
+        session = await get_session(self.request)
+        if session.get('user_id'):
+            del session['user_id']
+            redirect(self.request, 'login')
+        else:
+            raise web.HTTPForbidden(body=b'Forbidden')
