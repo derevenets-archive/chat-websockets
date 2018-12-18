@@ -11,7 +11,7 @@ class Message:
     async def save(self, user, text):
         return await self.collection.insert_one({
             'user': user,
-            'message': text,
+            'text': text,
             'time': datetime.now()
         })
 

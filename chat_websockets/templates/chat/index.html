@@ -10,7 +10,7 @@
 {% block content %}
   <div id='subscribe'>
     {% for mes in messages %}
-      <p>[{{ mes['time'].strftime('%H:%M:%S') }}] ({{ mes['user'] }}) {{ mes['msg'] }}</p>
+      <p>[{{ mes['time'].strftime('%H:%M:%S') }}] ({{ mes['user'] }}) {{ mes['text'] }}</p>
     {% endfor %}
   </div>
   <p>
